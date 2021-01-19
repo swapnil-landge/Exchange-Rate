@@ -37,8 +37,10 @@ public class ConversionRatesAPISteps extends AppTest {
 	// Constructor
 	// *************************************************************************************************************************************
 	public ConversionRatesAPISteps() {
-		baseURI = ConfigReader.getInstance().getProperty("base_URI");
-		baseURILatest = ConfigReader.getInstance().getProperty("base_URI_Latest");
+		baseURI = ConfigReader.getInstance().getProperty("https://api.ratesapi.io/api/");
+		baseURILatest = ConfigReader.getInstance().getProperty("https://api.ratesapi.io/api/latest");
+		
+
 	}
 
 	// *************************************************************************************************************************************
