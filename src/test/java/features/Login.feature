@@ -6,48 +6,48 @@ Feature: Verify & Validate conversion rates for past and future dates using Fore
 
   @Sanity @Regression
   Scenario Outline: Validate that API responds with correct status code 
-    When API is hit with end point as "<EndPoint>" "<QueryParam>" "<BaseCurrency>"
+    When API is hit with end point as "<Latest>" "<Symbols>" "<Base>"
     Then API Should respond with status code as "<StatusCode>"
-    And Response should contain not null values for "<BaseCurrency>"
+    And Response should contain not null values for "<Base>"
 
     Examples: 
-      | EndPoint   | QueryParam | BaseCurrency | StatusCode |
-      | latest     | symbols    | GBP          |        200 |
-      | latest     | symbols    | USD,CAD      |        200 |
-      | latest     | base       | USD          |        200 |
-      | 2020-05-03 | base       | RUB          |        200 |
-      | 2020-06-15 | symbols    | USD,GBP      |        200 |
+ |Latest                                    |Symbols                                                   | Base                                                    | StatusCode |
+ |https://api.ratesapi.io/api/latest HTTP/2 |https://api.ratesapi.io/api/latest?symbols=USD,GBP HTTP/2 | https://api.ratesapi.io/api/latest?base=USD HTTP/2      | 200        |
+ |https://api.ratesapi.io/api/latest HTTP/2 |https://api.ratesapi.io/api/latest?symbols=USD,GBP HTTP/2 | https://api.ratesapi.io/api/latest?base=USD,CAD HTTP/2  | 200        |
+ |https://api.ratesapi.io/api/latest HTTP/2 |https://api.ratesapi.io/api/latest?symbols=USD,GBP HTTP/2 | https://api.ratesapi.io/api/latest?base=USD HTTP/2      |        200 |
+ | 2020-10-07                       | https://api.ratesapi.io/api/latest?symbols=USD,GBP HTTP/2       | https://api.ratesapi.io/api/latest?base=RUB HTTP/2       |        200 |
+ | 2020-08-25 | https://api.ratesapi.io/api/latest?symbols=USD,GBP HTTP/2    | https://api.ratesapi.io/api/latest?base=USD,GBP HTTP/2      |        200 |
 
   @Sanity @Regression
-  Scenario Outline: Validate API responds with correct base value with currency based input
-    When API is hit with end point as "<EndPoint>" "<QueryParam>" "<BaseCurrency>"
+  Scenario Outline: Validate API responds with correct base value with currency 
+    When API is hit with end point as "<Latest>" "<Symbols>" "<Base>"
     Then API Should respond with status code as "200"
-    And Response should contain base currency as "<BaseCurrency>"
-    And Response should contain value "1.0" for "<BaseCurrency>"
-    And Response should contain not null values for "<CheckCurrencies>"
+    And Response should contain base currency as "<Base>"
+    And Response should contain value "1.0" for "<Base>"
+    And Response should contain not null values for "<Currencies>"
 
     Examples: 
-      | EndPoint | QueryParam | BaseCurrency | CheckCurrencies |
-      | latest   | base       | GBP          | INR,AUD         |
-      | latest   | base       | RUB          | PHP,AUD         |
-      | latest   | base       | AUD          | INR,USD         |
-      | latest   | base       | USD          | INR,AUD         |
-      | latest   | base       | NZD          | INR,AUD         |
+      | Latest                                      | Symbols                                                  | Base         | Currencies |
+      | https://api.ratesapi.io/api/latest HTTP/2   | https://api.ratesapi.io/api/latest?base=USD HTTP/2       | GBP          | CAD,AUD         |
+      | https://api.ratesapi.io/api/latest HTTP/2    |https://api.ratesapi.io/api/latest?base=USD HTTP/2       | RUB          | PHP,AUD         |
+      | https://api.ratesapi.io/api/latest HTTP/2    | https://api.ratesapi.io/api/latest?base=USD HTTP/2       | AUD          | INR,USD         |
+      | https://api.ratesapi.io/api/latest HTTP/2    | https://api.ratesapi.io/api/latest?base=USD HTTP/2       | USD          | RUB,AUD         |
+      | https://api.ratesapi.io/api/latest HTTP/2    | https://api.ratesapi.io/api/latest?base=USD HTTP/2       | NZD          | INR,AUD         |
 
   @InvalidEndpoint @Sanity @Regression
-  Scenario Outline: Validate results when incorrect/invalid endpoint is invoked
+  Scenario Outline: Validate results when invalid endpoint
     When API is hit with end point as ?base="<EndPoint>"
     Then API Should respond with status code as "<StatusCode>"
     And Error message should be displayed as "<ErrorMessage>"
 
     Examples: 
       | EndPoint | StatusCode | ErrorMessage                 |
-      | BKG      |        400 | Base 'BKG' is not supported. |
-      | 123      |        400 | Base '123' is not supported. |
-      | @#$      |        400 | Base '@#$' is not supported. |
+      | ABC      |        400 | Base Currency is not supported. |
+      | D13      |        400 | Base Currency is not supported. |
+      | !%&      |        400 | Base Currency is not supported. |
 
   @PastConversionRates @Sanity @Regression
-  Scenario Outline: Validate that API returns data for specific past date
+  Scenario Outline: Validate that API returns data for past date
     When API is hit with end point as "<EndPoint>" "<QueryParam>" "<BaseCurrency>"
     Then API Should respond with status code as "200"
     And Response should contain date as "<ResponseDate>"
@@ -61,7 +61,7 @@ Feature: Verify & Validate conversion rates for past and future dates using Fore
       | 2019-12-31 | base       | EUR          | 2019-12-31   | EUR,JPY         |
 
   @FutureConversionRates @Sanity @Regression
-  Scenario Outline: Validate that API returns data for today when queried for a future date
+  Scenario Outline: Validate that API returns data for future date
     When API is hit with end point as "<EndPoint>" "<QueryParam>" "<BaseCurrency>"
     Then API Should respond with status code as "200"
     And Response should contain date as "<ResponseDate>"
