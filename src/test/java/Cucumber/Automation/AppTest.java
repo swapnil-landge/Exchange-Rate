@@ -46,8 +46,7 @@ public class AppTest {
 	}
 
 	// *************************************************************************************************************************************
-	// Check for API by validating response status code
-	// isAPIAccessible(baseURI,200)
+	// Check for API validating response status code
 	// *************************************************************************************************************************************
 	public void isAPIAccessible(String baseURI, int expStatusCode) {
 		try {
@@ -69,11 +68,9 @@ public class AppTest {
 	}
 
 	// *************************************************************************************************************************************
-	// Endpoint without query parameters and capture response
-	// hitEndpoint(baseURI+"2020-06-02"
+	// Endpoint without query parameters 
 	// *************************************************************************************************************************************
 	public void hitEndpoint(String endPoint) {
-		logger.info("Hitting endpoint '" + endPoint + "'");
 		try {
 			// Setup Requestspecification object
 			RestAssured.baseURI = endPoint;
@@ -94,8 +91,7 @@ public class AppTest {
 	}
 
 	// *************************************************************************************************************************************
-	// Endpoint with query parameters and capture response
-	// hitEndpoint(baseURI+"2020-06-02"
+	// Endpoint with query parameters 
 	// *************************************************************************************************************************************
 	public void hitEndpoint(String endPoint, String queryParamField, String queryParamValue) {
 		
