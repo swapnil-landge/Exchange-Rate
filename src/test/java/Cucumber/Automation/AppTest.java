@@ -18,9 +18,6 @@ import io.restassured.specification.RequestSpecification;
 import utils.LoggerHelper;
 
 
-/**
- * Unit test for simple App.
- */
 public class AppTest {
     
     // Member variables
@@ -32,11 +29,7 @@ public class AppTest {
 	protected Scenario scn=null;
 	public static Logger logger;
 
-	// Constructor that fetches logger object
-	public TestBase() {
-		logger = LoggerHelper.getLogger(LoggerHelper.class);
-	}
-
+	
 	// Get response
 	public Response getResponse() {
 		return response;
@@ -53,12 +46,10 @@ public class AppTest {
 	}
 
 	// *************************************************************************************************************************************
-	// Function:isAPIAccessible()
-	// Objective:Health check for API by validating response status code
-	// Usage:isAPIAccessible(baseURI,200)
+	// Check for API by validating response status code
+	// isAPIAccessible(baseURI,200)
 	// *************************************************************************************************************************************
 	public void isAPIAccessible(String baseURI, int expStatusCode) {
-		logger.info("Checking if API '" + baseURI + "' is accessible");
 		try {
 			// Setup Requestspecification object
 			RestAssured.baseURI = baseURI;
@@ -68,24 +59,18 @@ public class AppTest {
 			response = httpRequest.get();
 			actStatusCode = response.getStatusCode();
 
-			// log status code and response
-			logger.info("API response received : " + response.asString());
-			logger.info("Response Status code '" + actStatusCode + "'");
-
+			
 			// Assert that expected and actual status codes match
 			Assert.assertEquals(expStatusCode, actStatusCode);
-			logger.info("API '" + baseURI + "' is accessible");
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error("Exception caught : " + e.getMessage());
-			throw new RuntimeException("TestBase::isAPIAccessible() -> Exception caught : " + e.getMessage()); 
+			throw new RuntimeException("AppTest::isAPIAccessible() -> Exception caught : " + e.getMessage()); 
 		}
 	}
 
 	// *************************************************************************************************************************************
-	// Function:hitEndpoint()
-	// Objective:Hit plain endpoint without query parameters and capture response
-	// Usage:hitEndpoint(baseURI+"2020-06-02"
+	// Endpoint without query parameters and capture response
+	// hitEndpoint(baseURI+"2020-06-02"
 	// *************************************************************************************************************************************
 	public void hitEndpoint(String endPoint) {
 		logger.info("Hitting endpoint '" + endPoint + "'");
@@ -101,22 +86,19 @@ public class AppTest {
 
 			// log response
 			bodyAsString = body.asString();
-			logger.info("Response received : " + bodyAsString);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error("Exception caught : " + e.getMessage());
-			throw new RuntimeException("TestBase::hitEndpoint() -> Exception caught : " + e.getMessage());
+			throw new RuntimeException("AppTest::hitEndpoint() -> Exception caught : " + e.getMessage());
 		}
 	}
 
 	// *************************************************************************************************************************************
-	// Function:hitEndpoint()
-	// Objective:Hit an endpoint with query parameters and capture response
-	// Usage:hitEndpoint(baseURI+"2020-06-02"
+	// Endpoint with query parameters and capture response
+	// hitEndpoint(baseURI+"2020-06-02"
 	// *************************************************************************************************************************************
 	public void hitEndpoint(String endPoint, String queryParamField, String queryParamValue) {
-		logger.info(
-				"Hitting endpoint '" + endPoint + "', queryParams '" + queryParamField + "," + queryParamValue + "'");
+		
 		try {
 			// Setup Requestspecification object
 			RestAssured.baseURI = endPoint;
@@ -130,13 +112,10 @@ public class AppTest {
 			bodyAsString = body.asString();
 			actStatusCode = response.getStatusCode();
 
-			// log response and status code
-			logger.info("Response received : " + bodyAsString);
-			logger.info("Response status code : '" + actStatusCode + "'");
+
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error("Exception caught : " + e.getMessage());
-			throw new RuntimeException("TestBase::hitEndpoint() -> Exception caught : " + e.getMessage());
+			throw new RuntimeException("AppTest::hitEndpoint() -> Exception caught : " + e.getMessage());
 		}
 	}
 }
